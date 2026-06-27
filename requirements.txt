@@ -6,3 +6,5 @@ requests
 tqdm
 pandas
 jupyter
+gradio
+huggingface_hub

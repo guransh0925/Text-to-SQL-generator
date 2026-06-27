@@ -29,6 +29,7 @@ SELECT employee_name FROM employees WHERE salary > 50000;
 - `prepare_merged_text_sql.py` - converts `merged_data.csv` into train/validation/test JSONL files
 - `train_text_to_sql.py` - fine-tunes the model
 - `generate_sql.py` - command-line SQL generator
+- `app.py` - Hugging Face Spaces Gradio app
 - `web_app.py` - web server for the browser-based generator
 - `web/` - frontend files for the hosted demo
 - `evaluate_text_to_sql.py` - records exact-match and token-F1 metrics

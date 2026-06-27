@@ -39,6 +39,29 @@ http://127.0.0.1:8000
 
 Use a Python web service, not a static site host. Static hosts can show the HTML, but they cannot run the PyTorch model.
 
+## Recommended Free Host: Hugging Face Spaces
+
+Render Free has 512MB RAM, which is too small for the checkpoint and PyTorch runtime. For a free public demo, create a Hugging Face Space instead:
+
+1. Go to `https://huggingface.co/spaces`.
+2. Click **Create new Space**.
+3. Choose **Gradio** as the SDK.
+4. Choose **CPU Basic** hardware.
+5. Push this repo to the Space, or upload the repo files.
+6. In the Space, use `app.py` as the entrypoint.
+7. Use `requirements-space.txt` as the Space requirements, or copy its contents into the Space's `requirements.txt`.
+
+The Space app downloads the checkpoint from:
+
+```text
+MODEL_REPO_ID=guransh0925/text-to-sql-generator
+MODEL_FILENAME=text_to_sql_model.pth
+```
+
+If your Hugging Face checkpoint filename is different, set `MODEL_FILENAME` in the Space settings.
+
+## Render
+
 Build command:
 
 ```text
