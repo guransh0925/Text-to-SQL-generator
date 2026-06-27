@@ -83,6 +83,80 @@ def _has_table(tables, table_name):
     return table_name in tables
 
 
+def _singular(name):
+    return name[:-1] if name.endswith("s") else name
+
+
+def _mentioned_table(tables, question):
+    for table in tables:
+        table_words = {table, _singular(table)}
+        if any(re.search(rf"\b{re.escape(word)}\b", question, flags=re.IGNORECASE) for word in table_words):
+            return table
+    return next(iter(tables)) if len(tables) == 1 else None
+
+
+def _quoted_value_after_column(question, column):
+    pattern = rf"\b{re.escape(column)}\b\s*(?:=|is|named|with|as)?\s*[\"']([^\"']+)[\"']"
+    match = re.search(pattern, question, flags=re.IGNORECASE)
+    return match.group(1).strip() if match else None
+
+
+def _bare_value_after_column(question, column):
+    pattern = rf"\b{re.escape(column)}\b\s*(?:=|is|named|with|as)\s+([A-Za-z][\w-]*)"
+    match = re.search(pattern, question, flags=re.IGNORECASE)
+    return match.group(1).strip() if match else None
+
+
+def _number_value_after_column(question, column):
+    pattern = rf"\b{re.escape(column)}\b\s*(?:=|is|with|as)?\s+\$?([0-9][0-9,]*(?:\.\d+)?)"
+    match = re.search(pattern, question, flags=re.IGNORECASE)
+    return match.group(1).replace(",", "") if match else None
+
+
+def _generic_conditions(columns, question):
+    conditions = []
+    q = question.lower()
+
+    for column in columns:
+        column_lower = column.lower()
+        value = _quoted_value_after_column(question, column_lower) or _bare_value_after_column(question, column_lower)
+        if value:
+            conditions.append(f"{column} = {_quote(value)}")
+            continue
+
+        number_value = _number_value_after_column(question, column_lower)
+        if number_value:
+            conditions.append(f"{column} = {number_value}")
+            continue
+
+        number = _number_after(q, [f"{column_lower} over", f"{column_lower} above", f"{column_lower} greater than"])
+        if number:
+            conditions.append(f"{column} > {number}")
+
+    return conditions
+
+
+def _generic_simple_sql(tables, question):
+    table = _mentioned_table(tables, question)
+    if not table:
+        return None
+
+    columns = tables[table]
+    conditions = _generic_conditions(columns, question)
+
+    select_expr = "*"
+    for column in columns:
+        if column.lower() in question.lower() and re.search(r"\b(show|select|get|list)\b", question, flags=re.IGNORECASE):
+            if " with " not in question.lower() and " where " not in question.lower():
+                select_expr = column
+            break
+
+    sql = f"SELECT {select_expr} FROM {table}"
+    if conditions:
+        sql += " WHERE " + " AND ".join(conditions)
+    return sql + ";"
+
+
 def heuristic_sql(schema, question):
     tables = parse_schema(schema)
     if not tables:
@@ -151,4 +225,4 @@ def heuristic_sql(schema, question):
             sql += " WHERE " + " AND ".join(where)
         return sql + ";"
 
-    return None
+    return _generic_simple_sql(tables, question)
