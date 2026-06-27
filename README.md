@@ -1,19 +1,20 @@
-# Text-to-SQL GPT Fine-Tuning
+# Text-to-SQL Generator
 
-This project fine-tunes a GPT-style model for a small text-to-SQL task. The model architecture is implemented from scratch in `utilities.py`, following the learning path from Sebastian Raschka's *Build a Large Language Model From Scratch*, then adapted into a practical SQL generation demo.
+This project is a text-to-SQL generator built with a small GPT-style language model implemented from scratch in PyTorch. It takes a database schema plus a natural-language question and returns a SQL query.
+
+The model architecture follows the learning path from Sebastian Raschka's *Build a Large Language Model From Scratch*, then adapts that code into a practical text-to-SQL demo with a command-line generator and a hosted web interface.
 
 ## What It Does
 
-Given database metadata and a natural-language instruction, the model generates a SQL query.
-
-Example:
+Input:
 
 ```text
 Schema:
 Table: employees
 Columns: employee_id, employee_name, salary
 
-Question: Retrieve the names of all employees earning more than $50,000.
+Question:
+Retrieve the names of all employees earning more than $50,000.
 ```
 
 Output:
@@ -22,49 +23,41 @@ Output:
 SELECT employee_name FROM employees WHERE salary > 50000;
 ```
 
-## Project Files
+The web demo also includes a lightweight schema-aware fallback for common simple queries, so examples like completed orders over a total threshold return valid SQL even when the fine-tuned model struggles.
 
-- `utilities.py` - GPT model, attention blocks, generation helpers, GPT-2 weight loading
-- `gpt_download.py` - helper from Raschka's book for loading GPT-2 weights
-- `prepare_merged_text_sql.py` - converts `merged_data.csv` into train/validation/test JSONL files
-- `train_text_to_sql.py` - fine-tunes the model
-- `generate_sql.py` - command-line SQL generator
-- `app.py` - Hugging Face Spaces Gradio app
-- `web_app.py` - web server for the browser-based generator
-- `web/` - frontend files for the hosted demo
-- `evaluate_text_to_sql.py` - records exact-match and token-F1 metrics
-- `merged_data.csv` - schema-aware text-to-SQL dataset
+## Web Demo
 
-Large model files are intentionally ignored by Git.
+The hosted version is designed to run on Hugging Face Spaces using `app.py`.
 
-## Setup
+The model weights are not committed to this repository because they are large. The Space downloads the checkpoint from a Hugging Face model repository at runtime.
 
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Default model settings:
+
+```text
+MODEL_REPO_ID=guransh0925/text-to-sql-generator
+MODEL_FILENAME=text_to_sql_model.pth
 ```
 
-Prepare the dataset:
+If the checkpoint filename changes, update `MODEL_FILENAME` in the Space settings.
+
+## Run Locally
+
+From the repository folder:
 
 ```powershell
-.\.venv\Scripts\python.exe prepare_merged_text_sql.py --repeat 8
+python -m pip install -r requirements.txt
 ```
 
-Fine-tune from local GPT-2 124M weights:
+Generate SQL from the command line:
 
 ```powershell
-.\.venv\Scripts\python.exe train_text_to_sql.py --train-file data/merged_text_sql/train.jsonl --val-file data/merged_text_sql/val.jsonl --init gpt2 --epochs 3 --batch-size 1 --max-steps 1200 --lr 2e-5
+python generate_sql.py "Retrieve the names of all employees earning more than $50,000." --schema-file employee_schema.txt --checkpoint checkpoints/text_to_sql_model.pth
 ```
 
-Generate SQL:
+Run the browser-based local app:
 
 ```powershell
-.\.venv\Scripts\python.exe generate_sql.py "Retrieve the names of all employees earning more than $50,000." --schema-file employee_schema.txt
-```
-
-Run the website locally:
-
-```powershell
-.\.venv\Scripts\python.exe web_app.py
+python web_app.py --checkpoint checkpoints/text_to_sql_model.pth
 ```
 
 Then open:
@@ -73,10 +66,75 @@ Then open:
 http://127.0.0.1:8000
 ```
 
+If you are running from inside a copied repo folder and your `.venv`, `checkpoints`, or `gpt2` folders are one directory above it, use paths like:
+
+```powershell
+..\.venv\Scripts\python.exe web_app.py --checkpoint ..\checkpoints\text_to_sql_model.pth --tokenizer-dir ..\gpt2\124M
+```
+
+## Example Schemas To Try
+
+Customers and orders:
+
+```sql
+CREATE TABLE customers (
+  id INTEGER PRIMARY KEY,
+  name TEXT,
+  city TEXT,
+  signup_date TEXT
+);
+CREATE TABLE orders (
+  id INTEGER PRIMARY KEY,
+  customer_id INTEGER,
+  order_date TEXT,
+  total REAL,
+  status TEXT
+);
+```
+
+Questions:
+
+```text
+Show completed orders over 1000.
+Show orders with total greater than 1000.
+Show all customers.
+Show the names of customers from Delhi.
+```
+
+Employees:
+
+```text
+Table: employees
+Columns: employee_id, employee_name, department, salary
+```
+
+Questions:
+
+```text
+Show all employees.
+Show employee names.
+Show employees with salary greater than 50000.
+Show names of employees in the sales department.
+```
+
+## Training
+
+Prepare the dataset:
+
+```powershell
+python prepare_merged_text_sql.py --repeat 8
+```
+
+Fine-tune from local GPT-2 124M weights:
+
+```powershell
+python train_text_to_sql.py --train-file data/merged_text_sql/train.jsonl --val-file data/merged_text_sql/val.jsonl --init gpt2 --epochs 3 --batch-size 1 --max-steps 1200 --lr 2e-5
+```
+
 Evaluate:
 
 ```powershell
-.\.venv\Scripts\python.exe evaluate_text_to_sql.py --test-file data/merged_text_sql/test.jsonl --checkpoint checkpoints/text_to_sql_model.pth --limit 50
+python evaluate_text_to_sql.py --test-file data/merged_text_sql/test.jsonl --checkpoint checkpoints/text_to_sql_model.pth --limit 50
 ```
 
 Metrics are saved to:
@@ -86,27 +144,32 @@ outputs/metrics/summary.json
 outputs/metrics/predictions.csv
 ```
 
-## Current Sample Result
+## Project Files
 
-On a quick 10-example sample from an earlier checkpoint:
+- `app.py` - Hugging Face Spaces Gradio app
+- `web_app.py` - lightweight Python web server for the custom browser UI
+- `web/` - HTML, CSS, and JavaScript for the browser UI
+- `sql_heuristics.py` - schema-aware fallback for common simple queries
+- `generate_sql.py` - command-line SQL generator
+- `train_text_to_sql.py` - fine-tuning script
+- `evaluate_text_to_sql.py` - evaluation script
+- `text_to_sql_common.py` - prompt formatting, tokenizer loading, model loading, dataset helpers
+- `utilities.py` - GPT model, attention blocks, generation helpers, GPT-2 weight loading
+- `prepare_merged_text_sql.py` - converts `merged_data.csv` into train/validation/test JSONL files
+- `gpt_download.py` - helper for downloading/loading GPT-2 weights
+- `merged_data.csv` - schema-aware text-to-SQL dataset
+- `DEPLOYMENT.md` - hosting notes
 
-```text
-Exact match: 0.00
-Average token F1: 0.3136
-```
+## Limitations
 
-The model can produce correct simple schema-aware examples, but it still struggles with complex joins and nested SQL. This is expected for a small educational fine-tune and is listed as a limitation rather than hidden.
+This is an educational fine-tuned model, not a production SQL assistant. It can handle simple examples, but it may fail on joins, nested queries, unfamiliar schemas, and exact SQL formatting. Generated SQL should always be reviewed before running it on a real database.
 
-## Notes
-
-The following files/folders are local artifacts and should not be committed:
+Large model files are intentionally ignored by Git:
 
 - `checkpoints/`
 - `gpt2/`
-- `model.pth`
-- `model_and_optimizer.pth`
+- `*.pth`
+- `*.pt`
 - `.venv/`
 
-If sharing the trained model, upload the checkpoint separately as a GitHub release asset or provide instructions to train it locally.
-
-For hosting the website, see `DEPLOYMENT.md`. Use a Python web service, not a static site host, because the server needs to load the PyTorch model and respond to `/api/generate`.
+For hosting, use a Python/ML-capable service such as Hugging Face Spaces. Static hosts like GitHub Pages cannot run the PyTorch model.
