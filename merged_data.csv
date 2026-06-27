@@ -1,0 +1,823 @@
+instruction,query,database
+"Retrieve the names of all employees earning more than $50,000.",SELECT employee_name FROM employees WHERE salary > 50000;,"{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'salary']}"
+Get the average salary for each department.,"SELECT department, AVG(salary) AS avg_salary FROM employees GROUP BY department;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department', 'salary']}"
+Find all customers who have placed an order.,SELECT DISTINCT customers.customer_name FROM customers INNER JOIN orders ON customers.customer_id = orders.customer_id;,"{'table': 'customers', 'columns': ['customer_id', 'customer_name']}"
+List products that have never been ordered.,SELECT product_name FROM products WHERE product_id NOT IN (SELECT DISTINCT product_id FROM orders);,"{'table': 'products', 'columns': ['product_id', 'product_name']}"
+Find the total revenue for each product category.,"SELECT category, SUM(price * quantity) AS total_revenue FROM products INNER JOIN orders ON products.product_id = orders.product_id GROUP BY category;","{'table': 'products', 'columns': ['product_id', 'category', 'price']}"
+Get the top 3 customers who placed the highest number of orders.,"SELECT customer_id, COUNT(order_id) AS order_count FROM orders GROUP BY customer_id ORDER BY order_count DESC LIMIT 3;","{'table': 'orders', 'columns': ['order_id', 'customer_id']}"
+Find employees who have been in the company for more than 5 years.,"SELECT employee_name FROM employees WHERE DATEDIFF(CURDATE(), hire_date) > 5 * 365;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'hire_date']}"
+Retrieve the details of the most recent order placed.,SELECT * FROM orders ORDER BY order_date DESC LIMIT 1;,"{'table': 'orders', 'columns': ['order_id', 'customer_id', 'order_date']}"
+Find the employee with the second highest salary.,"SELECT employee_name, salary FROM employees ORDER BY salary DESC LIMIT 1 OFFSET 1;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'salary']}"
+List customers who have placed more than 5 orders.,SELECT customer_id FROM orders GROUP BY customer_id HAVING COUNT(order_id) > 5;,"{'table': 'orders', 'columns': ['order_id', 'customer_id']}"
+Find employees who earn more than the company average salary.,"SELECT employee_name, salary FROM employees WHERE salary > (SELECT AVG(salary) FROM employees);","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'salary']}"
+Retrieve the order count per customer along with their names.,"SELECT customers.customer_name, COUNT(orders.order_id) AS order_count FROM customers LEFT JOIN orders ON customers.customer_id = orders.customer_id GROUP BY customers.customer_name;","{'table': 'customers', 'columns': ['customer_id', 'customer_name']}"
+List all employees who do not have any assigned department.,SELECT employee_name FROM employees WHERE department IS NULL;,"{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department']}"
+Find products that have been ordered more than 10 times.,SELECT product_name FROM products WHERE product_id IN (SELECT product_id FROM orders GROUP BY product_id HAVING COUNT(*) > 10);,"{'table': 'products', 'columns': ['product_id', 'product_name']}"
+Retrieve employees who joined in the last year.,"SELECT employee_name FROM employees WHERE hire_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR);","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'hire_date']}"
+List customers who have never placed an order.,SELECT customer_name FROM customers WHERE customer_id NOT IN (SELECT DISTINCT customer_id FROM orders);,"{'table': 'customers', 'columns': ['customer_id', 'customer_name']}"
+Find the most expensive product.,"SELECT product_name, price FROM products ORDER BY price DESC LIMIT 1;","{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+Retrieve orders placed in the last 30 days.,"SELECT * FROM orders WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY);","{'table': 'orders', 'columns': ['order_id', 'customer_id', 'order_date']}"
+Find the average order value.,SELECT AVG(price * quantity) AS avg_order_value FROM orders INNER JOIN products ON orders.product_id = products.product_id;,"{'table': 'orders', 'columns': ['order_id', 'product_id', 'quantity']}"
+Get the list of departments with more than 10 employees.,SELECT department FROM employees GROUP BY department HAVING COUNT(employee_id) > 10;,"{'table': 'employees', 'columns': ['employee_id', 'department']}"
+List all orders with a total greater than $1000.,"SELECT order_id, customer_id, total FROM orders WHERE total > 1000;","{'table': 'orders', 'columns': ['order_id', 'customer_id', 'total']}"
+Get product names and the average rating for products with at least 20 reviews.,"SELECT product_name, AVG(rating) AS avg_rating FROM reviews GROUP BY product_name HAVING COUNT(review_id) >= 20;","{'table': 'reviews', 'columns': ['review_id', 'product_name', 'rating']}"
+Find employees working in departments that have more than 5 employees.,"SELECT employee_name, department FROM employees WHERE department IN (SELECT department FROM employees GROUP BY department HAVING COUNT(employee_id) > 5);","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department']}"
+Retrieve customer details along with total orders placed.,"SELECT c.customer_id, c.customer_name, COUNT(o.order_id) AS total_orders FROM customers c LEFT JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id, c.customer_name;","{'table': 'customers', 'columns': ['customer_id', 'customer_name']}"
+List products along with their supplier names.,"SELECT p.product_name, s.supplier_name FROM products p INNER JOIN suppliers s ON p.supplier_id = s.supplier_id;","{'table': 'products', 'columns': ['product_id', 'product_name', 'supplier_id']}"
+Find the month with the highest total sales.,"SELECT MONTH(order_date) AS month, SUM(total) AS total_sales FROM orders GROUP BY MONTH(order_date) ORDER BY total_sales DESC LIMIT 1;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'total']}"
+Retrieve all orders with no corresponding customer record.,SELECT order_id FROM orders WHERE customer_id NOT IN (SELECT customer_id FROM customers);,"{'table': 'orders', 'columns': ['order_id', 'customer_id']}"
+Get the latest hire date from each department.,"SELECT department, MAX(hire_date) AS latest_hire FROM employees GROUP BY department;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department', 'hire_date']}"
+List all suppliers who supply more than 3 products.,"SELECT supplier_id, COUNT(product_id) AS product_count FROM products GROUP BY supplier_id HAVING COUNT(product_id) > 3;","{'table': 'products', 'columns': ['product_id', 'supplier_id']}"
+Retrieve customers and the sum of their order totals.,"SELECT customer_id, SUM(total) AS total_spent FROM orders GROUP BY customer_id;","{'table': 'orders', 'columns': ['order_id', 'customer_id', 'total']}"
+Find products with prices within the top 10% of all products.,"SELECT product_name, price FROM products WHERE price >= (SELECT PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY price) FROM products);","{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+List employees with birthdays in the current month.,"SELECT employee_name, birth_date FROM employees WHERE MONTH(birth_date) = MONTH(CURDATE());","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'birth_date']}"
+Retrieve the average rating for each product category.,"SELECT category, AVG(rating) AS avg_rating FROM reviews INNER JOIN products ON reviews.product_id = products.product_id GROUP BY category;","{'table': 'reviews', 'columns': ['review_id', 'product_id', 'rating']}"
+Find customers with duplicate email addresses.,"SELECT email, COUNT(*) AS count FROM customers GROUP BY email HAVING COUNT(*) > 1;","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'email']}"
+Get the total number of orders placed each day.,"SELECT order_date, COUNT(order_id) AS daily_orders FROM orders GROUP BY order_date;","{'table': 'orders', 'columns': ['order_id', 'order_date']}"
+Retrieve employees with salaries below the department average.,"SELECT e.employee_name, e.salary, e.department FROM employees e WHERE e.salary < (SELECT AVG(salary) FROM employees WHERE department = e.department);","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'salary', 'department']}"
+List products that have been discontinued.,SELECT product_name FROM products WHERE discontinued = 1;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'discontinued']}"
+Find the total sales per region.,"SELECT region, SUM(total) AS total_sales FROM orders GROUP BY region;","{'table': 'orders', 'columns': ['order_id', 'region', 'total']}"
+Retrieve order details along with customer and product information.,"SELECT o.order_id, c.customer_name, p.product_name, o.quantity FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN products p ON o.product_id = p.product_id;","{'table': 'orders', 'columns': ['order_id', 'customer_id', 'product_id', 'quantity']}"
+Get a list of all departments and the number of employees in each.,"SELECT department, COUNT(employee_id) AS employee_count FROM employees GROUP BY department;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department']}"
+Find the top 3 most active users based on login count.,"SELECT user_id, COUNT(login_id) AS login_count FROM logins GROUP BY user_id ORDER BY login_count DESC LIMIT 3;","{'table': 'logins', 'columns': ['login_id', 'user_id', 'login_time']}"
+Retrieve the list of orders along with the order status for each.,"SELECT order_id, order_status FROM orders;","{'table': 'orders', 'columns': ['order_id', 'order_status', 'order_date']}"
+List all products with a stock level below 50.,"SELECT product_name, stock FROM products WHERE stock < 50;","{'table': 'products', 'columns': ['product_id', 'product_name', 'stock']}"
+Find customers who registered in the last month.,"SELECT customer_name, registration_date FROM customers WHERE registration_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'registration_date']}"
+"Retrieve a list of employees and the departments they belong to, including those with no department assigned.","SELECT e.employee_name, d.department_name FROM employees e LEFT JOIN departments d ON e.department_id = d.department_id;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department_id']}"
+Get the total number of products sold per product category.,"SELECT p.category, SUM(o.quantity) AS total_sold FROM products p JOIN orders o ON p.product_id = o.product_id GROUP BY p.category;","{'table': 'orders', 'columns': ['order_id', 'product_id', 'quantity']}"
+Find the average time taken to deliver orders.,"SELECT AVG(DATEDIFF(delivery_date, order_date)) AS avg_delivery_time FROM orders WHERE delivery_date IS NOT NULL;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'delivery_date']}"
+List users who have not updated their profile in over a year.,"SELECT user_id, last_update FROM users WHERE last_update < DATE_SUB(CURDATE(), INTERVAL 1 YEAR);","{'table': 'users', 'columns': ['user_id', 'last_update', 'user_name']}"
+Retrieve details of the top-selling product along with its supplier information.,"SELECT p.product_name, s.supplier_name, SUM(o.quantity) AS total_sold FROM orders o JOIN products p ON o.product_id = p.product_id JOIN suppliers s ON p.supplier_id = s.supplier_id GROUP BY p.product_name, s.supplier_name ORDER BY total_sold DESC LIMIT 1;","{'table': 'products', 'columns': ['product_id', 'product_name', 'supplier_id']}"
+Find the number of orders placed in each quarter of the year.,"SELECT QUARTER(order_date) AS quarter, COUNT(order_id) AS orders_count FROM orders GROUP BY QUARTER(order_date);","{'table': 'orders', 'columns': ['order_id', 'order_date']}"
+List the names and email addresses of all users who have verified their account.,"SELECT user_name, email FROM users WHERE verified = 1;","{'table': 'users', 'columns': ['user_id', 'user_name', 'email', 'verified']}"
+Retrieve a list of orders where the total order value exceeds the average order value.,"SELECT order_id, total FROM orders WHERE total > (SELECT AVG(total) FROM orders);","{'table': 'orders', 'columns': ['order_id', 'total']}"
+Find products that have never been reviewed.,SELECT product_name FROM products WHERE product_id NOT IN (SELECT DISTINCT product_id FROM reviews);,"{'table': 'products', 'columns': ['product_id', 'product_name']}"
+List all departments with their average employee salary.,"SELECT department, AVG(salary) AS avg_salary FROM employees GROUP BY department;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department', 'salary']}"
+Retrieve customer names along with the date of their last order.,"SELECT c.customer_name, MAX(o.order_date) AS last_order FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_name;","{'table': 'orders', 'columns': ['order_id', 'customer_id', 'order_date']}"
+Find the number of orders placed by each sales representative.,"SELECT sales_rep_id, COUNT(order_id) AS orders_count FROM orders GROUP BY sales_rep_id;","{'table': 'orders', 'columns': ['order_id', 'sales_rep_id']}"
+List users along with the number of posts they have made.,"SELECT user_id, COUNT(post_id) AS posts_count FROM posts GROUP BY user_id;","{'table': 'posts', 'columns': ['post_id', 'user_id', 'post_content']}"
+Retrieve the details of orders that include a discount.,"SELECT order_id, discount FROM orders WHERE discount > 0;","{'table': 'orders', 'columns': ['order_id', 'discount', 'total']}"
+Find the highest-priced product in each product category.,"SELECT category, MAX(price) AS highest_price FROM products GROUP BY category;","{'table': 'products', 'columns': ['product_id', 'product_name', 'category', 'price']}"
+List all events occurring in the next 7 days.,"SELECT event_name, event_date FROM events WHERE event_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY);","{'table': 'events', 'columns': ['event_id', 'event_name', 'event_date']}"
+List all orders where the shipping cost is above the average shipping cost.,"SELECT order_id, shipping_cost FROM orders WHERE shipping_cost > (SELECT AVG(shipping_cost) FROM orders);","{'table': 'orders', 'columns': ['order_id', 'shipping_cost', 'order_date']}"
+Retrieve the names and phone numbers of customers who have not placed any orders.,"SELECT customer_name, phone FROM customers WHERE customer_id NOT IN (SELECT DISTINCT customer_id FROM orders);","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'phone']}"
+Get the list of products along with the total quantity sold for each.,"SELECT product_name, SUM(quantity) AS total_quantity_sold FROM orders JOIN products ON orders.product_id = products.product_id GROUP BY product_name;","{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+Find the employee who has processed the maximum number of orders.,"SELECT employee_id, COUNT(order_id) AS orders_processed FROM orders GROUP BY employee_id ORDER BY orders_processed DESC LIMIT 1;","{'table': 'orders', 'columns': ['order_id', 'employee_id', 'order_date']}"
+Retrieve the names of departments that have no employees assigned.,SELECT department_name FROM departments WHERE department_id NOT IN (SELECT DISTINCT department_id FROM employees);,"{'table': 'departments', 'columns': ['department_id', 'department_name']}"
+List all transactions made in the last week.,"SELECT transaction_id, amount, transaction_date FROM transactions WHERE transaction_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY);","{'table': 'transactions', 'columns': ['transaction_id', 'amount', 'transaction_date']}"
+Find the average product price for each supplier.,"SELECT supplier_id, AVG(price) AS average_price FROM products GROUP BY supplier_id;","{'table': 'products', 'columns': ['product_id', 'supplier_id', 'price']}"
+Retrieve customer names along with the count of products they have reviewed.,"SELECT c.customer_name, COUNT(r.review_id) AS review_count FROM customers c LEFT JOIN reviews r ON c.customer_id = r.customer_id GROUP BY c.customer_name;","{'table': 'reviews', 'columns': ['review_id', 'customer_id', 'product_id', 'rating']}"
+Get the details of orders that include more than 5 distinct products.,SELECT order_id FROM orders WHERE order_id IN (SELECT order_id FROM order_details GROUP BY order_id HAVING COUNT(DISTINCT product_id) > 5);,"{'table': 'order_details', 'columns': ['order_id', 'product_id', 'quantity']}"
+List all products with a price increase compared to the previous year.,"SELECT p.product_name, p.price, ph.previous_price FROM products p JOIN product_history ph ON p.product_id = ph.product_id WHERE p.price > ph.previous_price;","{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+Find the top 3 most popular product categories based on order quantity.,"SELECT p.category, SUM(od.quantity) AS total_quantity FROM order_details od JOIN products p ON od.product_id = p.product_id GROUP BY p.category ORDER BY total_quantity DESC LIMIT 3;","{'table': 'order_details', 'columns': ['order_id', 'product_id', 'quantity']}"
+Retrieve the list of orders along with the payment method used for each order.,"SELECT order_id, payment_method FROM orders;","{'table': 'orders', 'columns': ['order_id', 'payment_method', 'total']}"
+Get the list of customers who have updated their profile in the last 24 hours.,"SELECT customer_name, last_updated FROM customers WHERE last_updated >= DATE_SUB(NOW(), INTERVAL 1 DAY);","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'last_updated']}"
+List all reviews with a rating below 2 along with the product name.,"SELECT p.product_name, r.rating FROM reviews r JOIN products p ON r.product_id = p.product_id WHERE r.rating < 2;","{'table': 'reviews', 'columns': ['review_id', 'product_id', 'rating']}"
+Find the total discount amount given for orders in the current month.,SELECT SUM(discount) AS total_discount FROM orders WHERE MONTH(order_date) = MONTH(CURDATE());,"{'table': 'orders', 'columns': ['order_id', 'discount', 'order_date']}"
+Retrieve the names of products that have been reordered more than twice.,SELECT product_name FROM products WHERE reorder_level > 2;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'reorder_level']}"
+List all users along with the date they last logged in.,"SELECT user_id, last_login FROM users;","{'table': 'users', 'columns': ['user_id', 'user_name', 'last_login']}"
+Get the number of orders processed by each warehouse.,"SELECT warehouse_id, COUNT(order_id) AS orders_processed FROM orders GROUP BY warehouse_id;","{'table': 'orders', 'columns': ['order_id', 'warehouse_id', 'order_date']}"
+Retrieve a list of all promotional codes used in the last quarter.,"SELECT DISTINCT promo_code FROM orders WHERE order_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND CURDATE();","{'table': 'orders', 'columns': ['order_id', 'promo_code', 'order_date']}"
+Find the average review rating for products in each category that have at least 5 reviews.,"SELECT p.category, AVG(r.rating) AS avg_rating FROM reviews r JOIN products p ON r.product_id = p.product_id GROUP BY p.category HAVING COUNT(r.review_id) >= 5;","{'table': 'reviews', 'columns': ['review_id', 'product_id', 'rating']}"
+"Find the top 3 departments with the highest average salary, using a CTE and window function for ranking.","WITH DeptAvg AS (
+    SELECT department, AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY department
+)
+SELECT department, avg_salary
+FROM (
+    SELECT department, avg_salary,
+           RANK() OVER (ORDER BY avg_salary DESC) AS dept_rank
+    FROM DeptAvg
+) ranked
+WHERE dept_rank <= 3;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department', 'salary']}"
+Calculate the cumulative monthly sales per product category using window functions and a JOIN with a subquery for monthly totals.,"WITH MonthlySales AS (
+    SELECT category, DATE_FORMAT(order_date, '%Y-%m') AS month, SUM(total) AS monthly_total
+    FROM orders o
+    JOIN products p ON o.product_id = p.product_id
+    GROUP BY category, DATE_FORMAT(order_date, '%Y-%m')
+)
+SELECT category, month, monthly_total,
+       SUM(monthly_total) OVER (PARTITION BY category ORDER BY month ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_sales
+FROM MonthlySales;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'total', 'product_id']}"
+List customers who have placed orders in every available region using a nested subquery.,"SELECT customer_id, customer_name
+FROM customers
+WHERE NOT EXISTS (
+    SELECT region FROM regions
+    EXCEPT
+    SELECT region FROM orders WHERE orders.customer_id = customers.customer_id
+);","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'email']}"
+Retrieve employees whose salary is above the 90th percentile across the company using a subquery.,"SELECT employee_name, salary
+FROM employees
+WHERE salary > (
+    SELECT PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY salary) FROM employees
+);","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'salary']}"
+List product names along with their sales ranking for each month using window functions.,"SELECT product_name, month, monthly_sales,
+       RANK() OVER (PARTITION BY month ORDER BY monthly_sales DESC) AS sales_rank
+FROM (
+    SELECT p.product_name, DATE_FORMAT(o.order_date, '%Y-%m') AS month, SUM(o.quantity) AS monthly_sales
+    FROM orders o
+    JOIN products p ON o.product_id = p.product_id
+    GROUP BY p.product_name, DATE_FORMAT(o.order_date, '%Y-%m')
+) sub;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'quantity', 'product_id']}"
+Find the top-selling products per quarter using a CTE and UNION to combine quarterly results.,"WITH QuarterlySales AS (
+    SELECT product_id, QUARTER(order_date) AS quarter, SUM(quantity) AS total_sold
+    FROM orders
+    GROUP BY product_id, QUARTER(order_date)
+)
+SELECT product_id, quarter, total_sold
+FROM (
+    SELECT product_id, quarter, total_sold,
+           RANK() OVER (PARTITION BY quarter ORDER BY total_sold DESC) AS rank
+    FROM QuarterlySales
+) ranked
+WHERE rank = 1;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'product_id', 'quantity']}"
+Compute the year-over-year revenue growth for each region using CTEs and window functions.,"WITH RegionalRevenue AS (
+    SELECT region, YEAR(order_date) AS year, SUM(total) AS revenue
+    FROM orders
+    GROUP BY region, YEAR(order_date)
+), YoYGrowth AS (
+    SELECT region, year, revenue,
+           LAG(revenue) OVER (PARTITION BY region ORDER BY year) AS previous_year_revenue
+    FROM RegionalRevenue
+)
+SELECT region, year, revenue,
+       ((revenue - previous_year_revenue) / previous_year_revenue) * 100 AS growth_percentage
+FROM YoYGrowth
+WHERE previous_year_revenue IS NOT NULL;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'region', 'total']}"
+Retrieve customers whose order frequency exceeds the average order frequency for their city using nested subqueries.,"SELECT customer_name, city, order_count
+FROM (
+    SELECT c.customer_name, c.city, COUNT(o.order_id) AS order_count
+    FROM customers c
+    JOIN orders o ON c.customer_id = o.customer_id
+    GROUP BY c.customer_name, c.city
+) sub
+WHERE order_count > (
+    SELECT AVG(inner_sub.order_count) FROM (
+        SELECT COUNT(o.order_id) AS order_count
+        FROM customers c
+        JOIN orders o ON c.customer_id = o.customer_id
+        WHERE c.city = sub.city
+        GROUP BY c.customer_id
+    ) inner_sub
+);","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'city']}"
+"List employees along with the number of projects they have handled, and rank them within their department using window functions.","WITH EmpProjects AS (
+    SELECT e.employee_id, e.employee_name, e.department, COUNT(p.project_id) AS project_count
+    FROM employees e
+    LEFT JOIN projects p ON e.employee_id = p.employee_id
+    GROUP BY e.employee_id, e.employee_name, e.department
+)
+SELECT employee_name, department, project_count,
+       RANK() OVER (PARTITION BY department ORDER BY project_count DESC) AS dept_rank
+FROM EmpProjects;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'department'], 'extra_table': 'projects', 'extra_columns': ['project_id', 'employee_id']}"
+Find product categories that had increased sales compared to the previous quarter using a CTE and self-join.,"WITH Quarterly AS (
+    SELECT category, QUARTER(order_date) AS quarter, SUM(total) AS sales
+    FROM orders o JOIN products p ON o.product_id = p.product_id
+    GROUP BY category, QUARTER(order_date)
+)
+SELECT curr.category, curr.quarter, curr.sales, prev.sales AS previous_sales
+FROM Quarterly curr
+JOIN Quarterly prev ON curr.category = prev.category AND curr.quarter = prev.quarter + 1
+WHERE curr.sales > prev.sales;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'total', 'product_id']}"
+Retrieve orders with a discount higher than the average discount for orders placed by the same customer using a subquery.,"SELECT order_id, customer_id, discount
+FROM orders o1
+WHERE discount > (
+    SELECT AVG(discount) FROM orders o2 WHERE o2.customer_id = o1.customer_id
+);","{'table': 'orders', 'columns': ['order_id', 'customer_id', 'discount', 'total']}"
+List the top 5 customers with the highest lifetime value using a CTE and window functions.,"WITH CustomerValue AS (
+    SELECT customer_id, SUM(total) AS lifetime_value
+    FROM orders
+    GROUP BY customer_id
+)
+SELECT customer_id, lifetime_value
+FROM (
+    SELECT customer_id, lifetime_value,
+           RANK() OVER (ORDER BY lifetime_value DESC) AS rank
+    FROM CustomerValue
+) ranked
+WHERE rank <= 5;","{'table': 'orders', 'columns': ['order_id', 'customer_id', 'total', 'order_date']}"
+Find suppliers whose average delivery time is less than the overall average using a subquery and JOIN.,"SELECT s.supplier_name, AVG(DATEDIFF(delivery_date, order_date)) AS avg_delivery_time
+FROM orders o
+JOIN suppliers s ON o.supplier_id = s.supplier_id
+GROUP BY s.supplier_name
+HAVING AVG(DATEDIFF(delivery_date, order_date)) < (
+    SELECT AVG(DATEDIFF(delivery_date, order_date)) FROM orders
+);","{'table': 'orders', 'columns': ['order_id', 'supplier_id', 'order_date', 'delivery_date']}"
+"Retrieve detailed invoice information, including customer, order, and payment details, using multiple JOINs and a subquery for payment verification.","SELECT i.invoice_id, c.customer_name, o.order_date, p.payment_method
+FROM invoices i
+JOIN orders o ON i.order_id = o.order_id
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN payments p ON i.invoice_id = p.invoice_id
+WHERE p.status = 'Verified' AND i.invoice_id IN (
+    SELECT invoice_id FROM payments WHERE status = 'Verified'
+);","{'table': 'invoices', 'columns': ['invoice_id', 'order_id', 'invoice_date'], 'extra_tables': ['orders', 'customers', 'payments']}"
+List all products that have never been returned by performing a LEFT JOIN with the returns table and filtering for NULL.,"SELECT p.product_name
+FROM products p
+LEFT JOIN returns r ON p.product_id = r.product_id
+WHERE r.return_id IS NULL;","{'table': 'products', 'columns': ['product_id', 'product_name', 'price'], 'extra_table': 'returns', 'extra_columns': ['return_id', 'product_id', 'return_date']}"
+Calculate the moving average of daily sales for the past 30 days using window functions.,"SELECT order_date, total,
+       AVG(total) OVER (ORDER BY order_date ROWS BETWEEN 29 PRECEDING AND CURRENT ROW) AS moving_avg
+FROM orders
+WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY);","{'table': 'orders', 'columns': ['order_id', 'order_date', 'total']}"
+Find employees with a salary increase in the last year by comparing current salary to historical salary using a JOIN and subquery.,"SELECT e.employee_name, e.salary AS current_salary, h.previous_salary
+FROM employees e
+JOIN (
+    SELECT employee_id, MAX(salary) AS previous_salary
+    FROM salary_history
+    WHERE change_date < DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    GROUP BY employee_id
+) h ON e.employee_id = h.employee_id
+WHERE e.salary > h.previous_salary;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'salary'], 'extra_table': 'salary_history', 'extra_columns': ['employee_id', 'salary', 'change_date']}"
+List the regions where sales have increased by at least 20% compared to the previous month using a CTE and window functions.,"WITH MonthlyRegionSales AS (
+    SELECT region, DATE_FORMAT(order_date, '%Y-%m') AS month, SUM(total) AS sales
+    FROM orders
+    GROUP BY region, DATE_FORMAT(order_date, '%Y-%m')
+), RegionGrowth AS (
+    SELECT region, month, sales,
+           LAG(sales) OVER (PARTITION BY region ORDER BY month) AS previous_sales
+    FROM MonthlyRegionSales
+)
+SELECT region, month, sales, previous_sales,
+       ((sales - previous_sales) / previous_sales) * 100 AS growth_percentage
+FROM RegionGrowth
+WHERE previous_sales IS NOT NULL AND ((sales - previous_sales) / previous_sales) * 100 >= 20;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'total', 'region']}"
+Retrieve the top performing marketing campaigns based on conversion rate and ROI using nested subqueries and multiple JOINs.,"SELECT c.campaign_name, c.roi, c.conversion_rate
+FROM campaigns c
+WHERE c.campaign_id IN (
+    SELECT campaign_id FROM (
+        SELECT campaign_id, 
+               (SUM(conversions) / SUM(impressions)) AS conv_rate,
+               AVG(roi) AS avg_roi
+        FROM campaign_stats
+        GROUP BY campaign_id
+    ) stats
+    WHERE conv_rate > 0.05 AND avg_roi > 1.5
+)
+ORDER BY c.roi DESC;","{'table': 'campaigns', 'columns': ['campaign_id', 'campaign_name', 'roi', 'conversion_rate'], 'extra_table': 'campaign_stats', 'extra_columns': ['campaign_id', 'impressions', 'conversions', 'roi']}"
+Find the most consistent sales performers by calculating the standard deviation of monthly sales for each salesperson using a subquery.,"SELECT salesperson_id, STDDEV(monthly_sales) AS sales_stddev
+FROM (
+    SELECT salesperson_id, DATE_FORMAT(order_date, '%Y-%m') AS month, SUM(total) AS monthly_sales
+    FROM orders
+    GROUP BY salesperson_id, DATE_FORMAT(order_date, '%Y-%m')
+) sub
+GROUP BY salesperson_id
+ORDER BY sales_stddev ASC;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'total', 'salesperson_id']}"
+Find all customers who have placed orders totaling more than $1000,"SELECT c.customer_id, c.customer_name, SUM(o.order_amount) AS total_spent
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.customer_name
+HAVING SUM(o.order_amount) > 1000;","{'tables': {'customers': ['customer_id', 'customer_name', 'email', 'join_date'], 'orders': ['order_id', 'customer_id', 'order_date', 'order_amount', 'status']}}"
+List all products that have never been ordered,"SELECT p.product_id, p.product_name
+FROM products p
+LEFT JOIN order_items oi ON p.product_id = oi.product_id
+WHERE oi.product_id IS NULL;","{'tables': {'products': ['product_id', 'product_name', 'price', 'category', 'stock'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity', 'unit_price']}}"
+Find the average order value by month for the current year,"SELECT EXTRACT(MONTH FROM order_date) AS month,
+       AVG(order_amount) AS avg_order_value
+FROM orders
+WHERE EXTRACT(YEAR FROM order_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+GROUP BY EXTRACT(MONTH FROM order_date)
+ORDER BY month;","{'tables': {'orders': ['order_id', 'customer_id', 'order_date', 'order_amount', 'status']}}"
+Find employees who earn more than their department average,"WITH DeptAvg AS (
+    SELECT department, AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY department
+)
+SELECT e.employee_id, e.employee_name, e.department, e.salary
+FROM employees e
+JOIN DeptAvg d ON e.department = d.department
+WHERE e.salary > d.avg_salary;","{'tables': {'employees': ['employee_id', 'employee_name', 'department', 'salary', 'hire_date']}}"
+Find the top 3 most popular products by quantity sold,"SELECT p.product_id, p.product_name, SUM(oi.quantity) AS total_quantity
+FROM products p
+JOIN order_items oi ON p.product_id = oi.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_quantity DESC
+LIMIT 3;","{'tables': {'products': ['product_id', 'product_name', 'price', 'category'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity', 'unit_price']}}"
+Find customers who have purchased from both the 'Electronics' and 'Clothing' categories,"SELECT c.customer_id, c.customer_name
+FROM customers c
+WHERE EXISTS (
+    SELECT 1 FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN products p ON oi.product_id = p.product_id
+    WHERE o.customer_id = c.customer_id AND p.category = 'Electronics'
+)
+AND EXISTS (
+    SELECT 1 FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN products p ON oi.product_id = p.product_id
+    WHERE o.customer_id = c.customer_id AND p.category = 'Clothing'
+);","{'tables': {'customers': ['customer_id', 'customer_name', 'email'], 'orders': ['order_id', 'customer_id', 'order_date'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity'], 'products': ['product_id', 'product_name', 'category', 'price']}}"
+Calculate the running total of sales by day,"SELECT order_date, order_amount,
+       SUM(order_amount) OVER (ORDER BY order_date) AS running_total
+FROM orders
+ORDER BY order_date;","{'tables': {'orders': ['order_id', 'customer_id', 'order_date', 'order_amount']}}"
+Find departments where the total salary exceeds the company average department salary,"WITH DeptSalaries AS (
+    SELECT department, SUM(salary) AS total_salary
+    FROM employees
+    GROUP BY department
+)
+SELECT department, total_salary
+FROM DeptSalaries
+WHERE total_salary > (SELECT AVG(total_salary) FROM DeptSalaries);","{'tables': {'employees': ['employee_id', 'employee_name', 'department', 'salary']}}"
+Find the employee with the second highest salary in each department,"WITH RankedEmployees AS (
+    SELECT employee_id, employee_name, department, salary,
+           DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rank
+    FROM employees
+)
+SELECT employee_id, employee_name, department, salary
+FROM RankedEmployees
+WHERE rank = 2;","{'tables': {'employees': ['employee_id', 'employee_name', 'department', 'salary']}}"
+Find products that are priced above the average price of their category,"SELECT p.product_id, p.product_name, p.category, p.price
+FROM products p
+JOIN (
+    SELECT category, AVG(price) AS avg_price
+    FROM products
+    GROUP BY category
+) cat_avg ON p.category = cat_avg.category
+WHERE p.price > cat_avg.avg_price;","{'tables': {'products': ['product_id', 'product_name', 'category', 'price', 'stock']}}"
+Find customers who have placed orders in consecutive months,"WITH CustomerOrderMonths AS (
+    SELECT customer_id, EXTRACT(YEAR FROM order_date) AS year,
+           EXTRACT(MONTH FROM order_date) AS month,
+           LAG(EXTRACT(MONTH FROM order_date)) OVER (PARTITION BY customer_id ORDER BY order_date) AS prev_month
+    FROM orders
+)
+SELECT DISTINCT c.customer_id, c.customer_name
+FROM customers c
+JOIN CustomerOrderMonths com ON c.customer_id = com.customer_id
+WHERE com.month = com.prev_month + 1 OR (com.month = 1 AND com.prev_month = 12);","{'tables': {'customers': ['customer_id', 'customer_name', 'email'], 'orders': ['order_id', 'customer_id', 'order_date', 'amount']}}"
+Find the percentage of total sales for each product category,"WITH CategorySales AS (
+    SELECT p.category, SUM(oi.quantity * oi.unit_price) AS total_sales
+    FROM order_items oi
+    JOIN products p ON oi.product_id = p.product_id
+    GROUP BY p.category
+)
+SELECT category, total_sales,
+       total_sales / (SELECT SUM(total_sales) FROM CategorySales) * 100 AS percentage
+FROM CategorySales
+ORDER BY percentage DESC;","{'tables': {'products': ['product_id', 'product_name', 'category', 'price'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity', 'unit_price']}}"
+Find all managers who have more than 5 direct reports,"SELECT e.employee_id, e.employee_name, COUNT(r.employee_id) AS num_reports
+FROM employees e
+LEFT JOIN employees r ON e.employee_id = r.manager_id
+GROUP BY e.employee_id, e.employee_name
+HAVING COUNT(r.employee_id) > 5;","{'tables': {'employees': ['employee_id', 'employee_name', 'department', 'salary', 'manager_id']}}"
+Find customers who have placed exactly 3 orders,"SELECT c.customer_id, c.customer_name
+FROM customers c
+JOIN (
+    SELECT customer_id, COUNT(*) AS order_count
+    FROM orders
+    GROUP BY customer_id
+    HAVING COUNT(*) = 3
+) o ON c.customer_id = o.customer_id;","{'tables': {'customers': ['customer_id', 'customer_name', 'email'], 'orders': ['order_id', 'customer_id', 'order_date']}}"
+Find the month with the highest sales for each year,"WITH MonthlySales AS (
+    SELECT EXTRACT(YEAR FROM order_date) AS year,
+           EXTRACT(MONTH FROM order_date) AS month,
+           SUM(order_amount) AS total_sales,
+           RANK() OVER (PARTITION BY EXTRACT(YEAR FROM order_date) ORDER BY SUM(order_amount) DESC) AS rank
+    FROM orders
+    GROUP BY EXTRACT(YEAR FROM order_date), EXTRACT(MONTH FROM order_date)
+)
+SELECT year, month, total_sales
+FROM MonthlySales
+WHERE rank = 1;","{'tables': {'orders': ['order_id', 'customer_id', 'order_date', 'order_amount']}}"
+Find products that are always ordered in quantities greater than 2,"SELECT p.product_id, p.product_name
+FROM products p
+WHERE NOT EXISTS (
+    SELECT 1 FROM order_items oi
+    WHERE oi.product_id = p.product_id AND oi.quantity <= 2
+);","{'tables': {'products': ['product_id', 'product_name', 'price'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity']}}"
+Find employees who share the same salary within the same department,"SELECT e1.employee_id, e1.employee_name, e1.department, e1.salary
+FROM employees e1
+WHERE EXISTS (
+    SELECT 1 FROM employees e2
+    WHERE e1.department = e2.department
+    AND e1.salary = e2.salary
+    AND e1.employee_id != e2.employee_id
+)
+ORDER BY department, salary;","{'tables': {'employees': ['employee_id', 'employee_name', 'department', 'salary']}}"
+Find the customer who made the most recent order in each state,"WITH LatestOrders AS (
+    SELECT c.customer_id, c.customer_name, c.state, o.order_date,
+           ROW_NUMBER() OVER (PARTITION BY c.state ORDER BY o.order_date DESC) AS rn
+    FROM customers c
+    JOIN orders o ON c.customer_id = o.customer_id
+)
+SELECT customer_id, customer_name, state, order_date
+FROM LatestOrders
+WHERE rn = 1;","{'tables': {'customers': ['customer_id', 'customer_name', 'state', 'email'], 'orders': ['order_id', 'customer_id', 'order_date', 'amount']}}"
+Find products that are in the top 10% of most expensive products,"WITH ProductRanks AS (
+    SELECT product_id, product_name, price,
+           PERCENT_RANK() OVER (ORDER BY price DESC) AS pct_rank
+    FROM products
+)
+SELECT product_id, product_name, price
+FROM ProductRanks
+WHERE pct_rank <= 0.1;","{'tables': {'products': ['product_id', 'product_name', 'price', 'category']}}"
+Find the difference between each employee's salary and the department average,"SELECT e.employee_id, e.employee_name, e.department, e.salary,
+       e.salary - AVG(e.salary) OVER (PARTITION BY e.department) AS salary_diff_from_avg
+FROM employees e;","{'tables': {'employees': ['employee_id', 'employee_name', 'department', 'salary']}}"
+Find all orders that include at least 3 different product categories,"SELECT o.order_id, o.order_date, COUNT(DISTINCT p.category) AS unique_categories
+FROM orders o
+JOIN order_items oi ON o.order_id = oi.order_id
+JOIN products p ON oi.product_id = p.product_id
+GROUP BY o.order_id, o.order_date
+HAVING COUNT(DISTINCT p.category) >= 3;","{'tables': {'orders': ['order_id', 'customer_id', 'order_date'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity'], 'products': ['product_id', 'product_name', 'category', 'price']}}"
+Find customers who have placed orders in all categories,"SELECT c.customer_id, c.customer_name
+FROM customers c
+WHERE NOT EXISTS (
+    SELECT p.category
+    FROM products p
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM orders o
+        JOIN order_items oi ON o.order_id = oi.order_id
+        WHERE o.customer_id = c.customer_id
+        AND oi.product_id = p.product_id
+    )
+);","{'tables': {'customers': ['customer_id', 'customer_name', 'email'], 'products': ['product_id', 'product_name', 'category'], 'orders': ['order_id', 'customer_id', 'order_date'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity']}}"
+Calculate the percentage of total revenue each product category contributes,"SELECT 
+    p.category,
+    SUM(oi.quantity * oi.unit_price) AS category_revenue,
+    SUM(oi.quantity * oi.unit_price) * 100.0 / (
+        SELECT SUM(quantity * unit_price) 
+        FROM order_items
+    ) AS revenue_percentage
+FROM order_items oi
+JOIN products p ON oi.product_id = p.product_id
+GROUP BY p.category
+ORDER BY revenue_percentage DESC;","{'tables': {'products': ['product_id', 'product_name', 'category'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity', 'unit_price']}}"
+Find employees who manage more people than the average manager,"WITH ManagerCounts AS (
+    SELECT 
+        manager_id,
+        COUNT(*) AS report_count
+    FROM employees
+    WHERE manager_id IS NOT NULL
+    GROUP BY manager_id
+)
+SELECT e.employee_id, e.employee_name, mc.report_count
+FROM employees e
+JOIN ManagerCounts mc ON e.employee_id = mc.manager_id
+WHERE mc.report_count > (SELECT AVG(report_count) FROM ManagerCounts);","{'tables': {'employees': ['employee_id', 'employee_name', 'department', 'manager_id']}}"
+Identify products with inventory below the reorder level that haven't been ordered recently,"SELECT p.product_id, p.product_name, p.stock_quantity, p.reorder_level
+FROM products p
+WHERE p.stock_quantity < p.reorder_level
+AND NOT EXISTS (
+    SELECT 1
+    FROM order_items oi
+    JOIN orders o ON oi.order_id = o.order_id
+    WHERE oi.product_id = p.product_id
+    AND o.order_date > CURRENT_DATE - INTERVAL '30 days'
+);","{'tables': {'products': ['product_id', 'product_name', 'stock_quantity', 'reorder_level'], 'orders': ['order_id', 'order_date'], 'order_items': ['order_item_id', 'order_id', 'product_id']}}"
+Find the most common shipping address for each customer,"WITH AddressCounts AS (
+    SELECT 
+        customer_id,
+        shipping_address,
+        COUNT(*) AS address_use_count,
+        RANK() OVER (PARTITION BY customer_id ORDER BY COUNT(*) DESC) AS address_rank
+    FROM orders
+    GROUP BY customer_id, shipping_address
+)
+SELECT 
+    c.customer_id,
+    c.customer_name,
+    ac.shipping_address,
+    ac.address_use_count
+FROM customers c
+JOIN AddressCounts ac ON c.customer_id = ac.customer_id
+WHERE ac.address_rank = 1;","{'tables': {'customers': ['customer_id', 'customer_name'], 'orders': ['order_id', 'customer_id', 'shipping_address']}}"
+Calculate the average time between customer registration and first purchase,"SELECT AVG(o.order_date - c.join_date) AS avg_days_to_first_purchase
+FROM customers c
+JOIN (
+    SELECT 
+        customer_id,
+        MIN(order_date) AS order_date
+    FROM orders
+    GROUP BY customer_id
+) o ON c.customer_id = o.customer_id;","{'tables': {'customers': ['customer_id', 'join_date'], 'orders': ['order_id', 'customer_id', 'order_date']}}"
+Find products that are consistently rated 4 stars or higher,"SELECT p.product_id, p.product_name
+FROM products p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM product_reviews pr
+    WHERE pr.product_id = p.product_id
+    AND pr.rating < 4
+);","{'tables': {'products': ['product_id', 'product_name'], 'product_reviews': ['review_id', 'product_id', 'rating']}}"
+Calculate the monthly growth rate of new customers,"WITH MonthlyNewCustomers AS (
+    SELECT 
+        DATE_TRUNC('month', join_date) AS month,
+        COUNT(*) AS new_customers
+    FROM customers
+    GROUP BY DATE_TRUNC('month', join_date)
+)
+SELECT 
+    month,
+    new_customers,
+    LAG(new_customers) OVER (ORDER BY month) AS prev_month_count,
+    (new_customers - LAG(new_customers) OVER (ORDER BY month)) * 100.0 / 
+        LAG(new_customers) OVER (ORDER BY month) AS growth_percentage
+FROM MonthlyNewCustomers
+ORDER BY month;","{'tables': {'customers': ['customer_id', 'join_date']}}"
+Find customers who have purchased more than once in a single day,"SELECT 
+    o.customer_id,
+    c.customer_name,
+    o.order_date::date AS purchase_date,
+    COUNT(*) AS orders_in_day
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY o.customer_id, c.customer_name, o.order_date::date
+HAVING COUNT(*) > 1
+ORDER BY orders_in_day DESC;","{'tables': {'customers': ['customer_id', 'customer_name'], 'orders': ['order_id', 'customer_id', 'order_date']}}"
+Identify employees who have been with the company longer than their manager,"SELECT 
+    e.employee_id,
+    e.employee_name,
+    e.hire_date,
+    m.employee_id AS manager_id,
+    m.employee_name AS manager_name,
+    m.hire_date AS manager_hire_date
+FROM employees e
+JOIN employees m ON e.manager_id = m.employee_id
+WHERE e.hire_date < m.hire_date;","{'tables': {'employees': ['employee_id', 'employee_name', 'hire_date', 'manager_id']}}"
+Find the most popular product combinations in orders (pairs),"SELECT 
+    p1.product_id AS product1_id,
+    p1.product_name AS product1_name,
+    p2.product_id AS product2_id,
+    p2.product_name AS product2_name,
+    COUNT(*) AS times_ordered_together
+FROM order_items oi1
+JOIN order_items oi2 ON oi1.order_id = oi2.order_id AND oi1.product_id < oi2.product_id
+JOIN products p1 ON oi1.product_id = p1.product_id
+JOIN products p2 ON oi2.product_id = p2.product_id
+GROUP BY p1.product_id, p1.product_name, p2.product_id, p2.product_name
+ORDER BY times_ordered_together DESC
+LIMIT 10;","{'tables': {'products': ['product_id', 'product_name'], 'order_items': ['order_item_id', 'order_id', 'product_id']}}"
+"Calculate the average order value by customer tier (bronze, silver, gold)","WITH CustomerTiers AS (
+    SELECT 
+        customer_id,
+        CASE 
+            WHEN total_spent < 100 THEN 'Bronze'
+            WHEN total_spent < 500 THEN 'Silver'
+            ELSE 'Gold'
+        END AS customer_tier
+    FROM (
+        SELECT 
+            customer_id,
+            SUM(order_amount) AS total_spent
+        FROM orders
+        GROUP BY customer_id
+    ) t
+)
+SELECT 
+    ct.customer_tier,
+    COUNT(DISTINCT o.customer_id) AS customer_count,
+    AVG(o.order_amount) AS avg_order_value
+FROM orders o
+JOIN CustomerTiers ct ON o.customer_id = ct.customer_id
+GROUP BY ct.customer_tier
+ORDER BY customer_tier;","{'tables': {'orders': ['order_id', 'customer_id', 'order_amount']}}"
+Find customers who haven't purchased in the last 6 months but were previously active,"SELECT c.customer_id, c.customer_name, MAX(o.order_date) AS last_order_date
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.customer_name
+HAVING MAX(o.order_date) < CURRENT_DATE - INTERVAL '6 months'
+AND COUNT(*) >= 3
+ORDER BY last_order_date DESC;","{'tables': {'customers': ['customer_id', 'customer_name'], 'orders': ['order_id', 'customer_id', 'order_date']}}"
+Calculate the employee turnover rate by department,"WITH DepartmentStats AS (
+    SELECT 
+        department,
+        COUNT(*) AS current_employees,
+        SUM(CASE WHEN termination_date IS NOT NULL THEN 1 ELSE 0 END) AS terminated_employees
+    FROM employees
+    GROUP BY department
+)
+SELECT 
+    department,
+    current_employees,
+    terminated_employees,
+    terminated_employees * 100.0 / (current_employees + terminated_employees) AS turnover_rate
+FROM DepartmentStats
+ORDER BY turnover_rate DESC;","{'tables': {'employees': ['employee_id', 'department', 'hire_date', 'termination_date']}}"
+Find products that are often out of stock (stock = 0) but have high demand,"SELECT 
+    p.product_id,
+    p.product_name,
+    COUNT(CASE WHEN p.stock_quantity = 0 THEN 1 END) AS out_of_stock_count,
+    SUM(oi.quantity) AS total_demand
+FROM products p
+JOIN order_items oi ON p.product_id = oi.product_id
+JOIN orders o ON oi.order_id = o.order_id
+WHERE o.order_date > CURRENT_DATE - INTERVAL '6 months'
+GROUP BY p.product_id, p.product_name
+HAVING COUNT(CASE WHEN p.stock_quantity = 0 THEN 1 END) > 2
+AND SUM(oi.quantity) > 100
+ORDER BY total_demand DESC;","{'tables': {'products': ['product_id', 'product_name', 'stock_quantity'], 'orders': ['order_id', 'order_date'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity']}}"
+Calculate the average response time for customer support tickets by priority,"SELECT 
+    priority,
+    AVG(resolved_at - created_at) AS avg_response_time,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (resolved_at - created_at)) AS median_response_time
+FROM support_tickets
+WHERE resolved_at IS NOT NULL
+GROUP BY priority
+ORDER BY priority;","{'tables': {'support_tickets': ['ticket_id', 'customer_id', 'priority', 'created_at', 'resolved_at']}}"
+Find customers who always use the same payment method,"SELECT 
+    customer_id,
+    COUNT(DISTINCT payment_method) AS payment_methods_used
+FROM orders
+GROUP BY customer_id
+HAVING COUNT(DISTINCT payment_method) = 1;","{'tables': {'orders': ['order_id', 'customer_id', 'payment_method']}}"
+Identify the busiest hours for customer orders,"SELECT 
+    EXTRACT(HOUR FROM order_time) AS hour_of_day,
+    COUNT(*) AS order_count
+FROM orders
+GROUP BY EXTRACT(HOUR FROM order_time)
+ORDER BY order_count DESC
+LIMIT 5;","{'tables': {'orders': ['order_id', 'order_time']}}"
+Calculate the refund rate by product category,"SELECT 
+    p.category,
+    COUNT(*) AS total_orders,
+    SUM(CASE WHEN o.status = 'refunded' THEN 1 ELSE 0 END) AS refunded_orders,
+    SUM(CASE WHEN o.status = 'refunded' THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS refund_rate
+FROM orders o
+JOIN order_items oi ON o.order_id = oi.order_id
+JOIN products p ON oi.product_id = p.product_id
+GROUP BY p.category
+HAVING COUNT(*) > 50
+ORDER BY refund_rate DESC;","{'tables': {'orders': ['order_id', 'status'], 'order_items': ['order_item_id', 'order_id', 'product_id'], 'products': ['product_id', 'category']}}"
+Find employees with the highest average customer satisfaction ratings,"SELECT 
+    e.employee_id,
+    e.employee_name,
+    AVG(sr.rating) AS avg_rating,
+    COUNT(*) AS review_count
+FROM employee_service_ratings sr
+JOIN employees e ON sr.employee_id = e.employee_id
+GROUP BY e.employee_id, e.employee_name
+HAVING COUNT(*) >= 5
+ORDER BY avg_rating DESC
+LIMIT 10;","{'tables': {'employees': ['employee_id', 'employee_name'], 'employee_service_ratings': ['rating_id', 'employee_id', 'rating']}}"
+Calculate the average discount percentage used by customer tier,"WITH CustomerTiers AS (
+    SELECT 
+        customer_id,
+        CASE 
+            WHEN SUM(order_amount) < 1000 THEN 'Regular'
+            WHEN SUM(order_amount) < 5000 THEN 'Premium'
+            ELSE 'VIP'
+        END AS customer_tier
+    FROM orders
+    GROUP BY customer_id
+)
+SELECT 
+    ct.customer_tier,
+    AVG(o.discount_percentage) AS avg_discount_used,
+    COUNT(*) AS order_count
+FROM orders o
+JOIN CustomerTiers ct ON o.customer_id = ct.customer_id
+WHERE o.discount_percentage > 0
+GROUP BY ct.customer_tier
+ORDER BY ct.customer_tier;","{'tables': {'orders': ['order_id', 'customer_id', 'order_amount', 'discount_percentage']}}"
+List all customers with their total number of orders,"SELECT c.customer_id, c.customer_name, COUNT(o.order_id) AS total_orders
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.customer_name
+ORDER BY total_orders DESC;","{'tables': {'customers': ['customer_id', 'customer_name'], 'orders': ['order_id', 'customer_id']}}"
+Find products that have never been ordered,"SELECT p.product_id, p.product_name
+FROM products p
+LEFT JOIN order_items oi ON p.product_id = oi.product_id
+WHERE oi.order_id IS NULL;","{'tables': {'products': ['product_id', 'product_name'], 'order_items': ['order_item_id', 'order_id', 'product_id']}}"
+Calculate the total sales for each month,"SELECT 
+    EXTRACT(YEAR FROM order_date) AS year,
+    EXTRACT(MONTH FROM order_date) AS month,
+    SUM(order_amount) AS total_sales
+FROM orders
+GROUP BY EXTRACT(YEAR FROM order_date), EXTRACT(MONTH FROM order_date)
+ORDER BY year, month;","{'tables': {'orders': ['order_id', 'order_date', 'order_amount']}}"
+Find the top 5 best-selling products,"SELECT p.product_id, p.product_name, SUM(oi.quantity) AS total_quantity
+FROM products p
+JOIN order_items oi ON p.product_id = oi.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_quantity DESC
+LIMIT 5;","{'tables': {'products': ['product_id', 'product_name'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity']}}"
+List employees with their department names,"SELECT e.employee_id, e.employee_name, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+ORDER BY d.department_name, e.employee_name;","{'tables': {'employees': ['employee_id', 'employee_name', 'department_id'], 'departments': ['department_id', 'department_name']}}"
+Find orders placed in the last 7 days,"SELECT order_id, customer_id, order_date, order_amount
+FROM orders
+WHERE order_date >= CURRENT_DATE - INTERVAL '7 days'
+ORDER BY order_date DESC;","{'tables': {'orders': ['order_id', 'customer_id', 'order_date', 'order_amount']}}"
+Count the number of customers by country,"SELECT country, COUNT(*) AS customer_count
+FROM customers
+GROUP BY country
+ORDER BY customer_count DESC;","{'tables': {'customers': ['customer_id', 'customer_name', 'country']}}"
+Find the average order amount by customer,"SELECT customer_id, AVG(order_amount) AS avg_order_amount
+FROM orders
+GROUP BY customer_id
+ORDER BY avg_order_amount DESC;","{'tables': {'orders': ['order_id', 'customer_id', 'order_amount']}}"
+List products with prices higher than the average price,"SELECT product_id, product_name, price
+FROM products
+WHERE price > (SELECT AVG(price) FROM products)
+ORDER BY price DESC;","{'tables': {'products': ['product_id', 'product_name', 'price']}}"
+Find customers who haven't placed any orders,"SELECT c.customer_id, c.customer_name
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL;","{'tables': {'customers': ['customer_id', 'customer_name'], 'orders': ['order_id', 'customer_id']}}"
+Calculate the total revenue by product category,"SELECT p.category, SUM(oi.quantity * oi.unit_price) AS total_revenue
+FROM products p
+JOIN order_items oi ON p.product_id = oi.product_id
+GROUP BY p.category
+ORDER BY total_revenue DESC;","{'tables': {'products': ['product_id', 'category'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity', 'unit_price']}}"
+Find the most recent order for each customer,"SELECT customer_id, MAX(order_date) AS last_order_date
+FROM orders
+GROUP BY customer_id
+ORDER BY last_order_date DESC;","{'tables': {'orders': ['order_id', 'customer_id', 'order_date']}}"
+List all products with their supplier names,"SELECT p.product_id, p.product_name, s.supplier_name
+FROM products p
+JOIN suppliers s ON p.supplier_id = s.supplier_id
+ORDER BY s.supplier_name, p.product_name;","{'tables': {'products': ['product_id', 'product_name', 'supplier_id'], 'suppliers': ['supplier_id', 'supplier_name']}}"
+Count the number of orders by status,"SELECT status, COUNT(*) AS order_count
+FROM orders
+GROUP BY status
+ORDER BY order_count DESC;","{'tables': {'orders': ['order_id', 'status']}}"
+Find the employee with the most orders processed,"SELECT e.employee_id, e.employee_name, COUNT(o.order_id) AS orders_processed
+FROM employees e
+JOIN orders o ON e.employee_id = o.employee_id
+GROUP BY e.employee_id, e.employee_name
+ORDER BY orders_processed DESC
+LIMIT 1;","{'tables': {'employees': ['employee_id', 'employee_name'], 'orders': ['order_id', 'employee_id']}}"
+List customers and their favorite product category (most purchased),"WITH CustomerCategories AS (
+    SELECT 
+        o.customer_id,
+        p.category,
+        SUM(oi.quantity) AS total_quantity,
+        RANK() OVER (PARTITION BY o.customer_id ORDER BY SUM(oi.quantity) DESC) AS rank
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN products p ON oi.product_id = p.product_id
+    GROUP BY o.customer_id, p.category
+)
+SELECT 
+    c.customer_id,
+    c.customer_name,
+    cc.category AS favorite_category
+FROM customers c
+JOIN CustomerCategories cc ON c.customer_id = cc.customer_id
+WHERE cc.rank = 1;","{'tables': {'customers': ['customer_id', 'customer_name'], 'orders': ['order_id', 'customer_id'], 'order_items': ['order_item_id', 'order_id', 'product_id', 'quantity'], 'products': ['product_id', 'category']}}"
+Find the day of the week with the most orders,"SELECT 
+    EXTRACT(DOW FROM order_date) AS day_of_week,
+    TO_CHAR(order_date, 'Day') AS day_name,
+    COUNT(*) AS order_count
+FROM orders
+GROUP BY EXTRACT(DOW FROM order_date), TO_CHAR(order_date, 'Day')
+ORDER BY order_count DESC
+LIMIT 1;","{'tables': {'orders': ['order_id', 'order_date']}}"
+Calculate the average time between order placement and shipment,"SELECT AVG(ship_date - order_date) AS avg_shipping_time
+FROM orders
+WHERE ship_date IS NOT NULL;","{'tables': {'orders': ['order_id', 'order_date', 'ship_date']}}"
+List products with low inventory (below 10 units),"SELECT product_id, product_name, stock_quantity
+FROM products
+WHERE stock_quantity < 10
+ORDER BY stock_quantity ASC;","{'tables': {'products': ['product_id', 'product_name', 'stock_quantity']}}"
+Find customers who ordered more than 3 times,"SELECT customer_id, COUNT(*) AS order_count
+FROM orders
+GROUP BY customer_id
+HAVING COUNT(*) > 3
+ORDER BY order_count DESC;","{'tables': {'orders': ['order_id', 'customer_id']}}"
+Calculate the total discount given to customers,"SELECT SUM(discount_amount) AS total_discounts
+FROM orders
+WHERE discount_amount > 0;","{'tables': {'orders': ['order_id', 'discount_amount']}}"
+List all customers,SELECT * FROM customers;,"{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'email', 'phone']}"
+Count the total number of customers,SELECT COUNT(*) AS total_customers FROM customers;,"{'table': 'customers', 'columns': ['customer_id', 'customer_name']}"
+List all products with prices over $50,SELECT * FROM products WHERE price > 50;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+"Find orders placed after January 1, 2023",SELECT * FROM orders WHERE order_date > '2023-01-01';,"{'table': 'orders', 'columns': ['order_id', 'order_date', 'customer_id']}"
+List employees sorted by hire date (newest first),SELECT * FROM employees ORDER BY hire_date DESC;,"{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'hire_date']}"
+Find products in the 'Electronics' category,SELECT * FROM products WHERE category = 'Electronics';,"{'table': 'products', 'columns': ['product_id', 'product_name', 'category']}"
+Count how many products are out of stock,SELECT COUNT(*) FROM products WHERE stock_quantity = 0;,"{'table': 'products', 'columns': ['product_id', 'stock_quantity']}"
+List customers from New York,SELECT * FROM customers WHERE city = 'New York';,"{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'city']}"
+Find the most expensive product,SELECT * FROM products ORDER BY price DESC LIMIT 1;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+List all completed orders,SELECT * FROM orders WHERE status = 'Completed';,"{'table': 'orders', 'columns': ['order_id', 'status']}"
+Find customers whose names start with 'A',SELECT * FROM customers WHERE customer_name LIKE 'A%';,"{'table': 'customers', 'columns': ['customer_id', 'customer_name']}"
+Calculate the average product price,SELECT AVG(price) AS average_price FROM products;,"{'table': 'products', 'columns': ['product_id', 'price']}"
+List products sorted by name (A-Z),SELECT * FROM products ORDER BY product_name ASC;,"{'table': 'products', 'columns': ['product_id', 'product_name']}"
+Find orders with amounts between $100 and $500,SELECT * FROM orders WHERE order_amount BETWEEN 100 AND 500;,"{'table': 'orders', 'columns': ['order_id', 'order_amount']}"
+Count how many orders were placed in 2023,SELECT COUNT(*) FROM orders WHERE EXTRACT(YEAR FROM order_date) = 2023;,"{'table': 'orders', 'columns': ['order_id', 'order_date']}"
+List all unique product categories,SELECT DISTINCT category FROM products;,"{'table': 'products', 'columns': ['product_id', 'category']}"
+Find the oldest employee,SELECT * FROM employees ORDER BY hire_date ASC LIMIT 1;,"{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'hire_date']}"
+List customers with their IDs and emails only,"SELECT customer_id, email FROM customers;","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'email']}"
+Find products with exactly 10 items in stock,SELECT * FROM products WHERE stock_quantity = 10;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'stock_quantity']}"
+Count how many customers have phone numbers,SELECT COUNT(*) FROM customers WHERE phone IS NOT NULL;,"{'table': 'customers', 'columns': ['customer_id', 'phone']}"
+List orders sorted by amount (highest first),SELECT * FROM orders ORDER BY order_amount DESC;,"{'table': 'orders', 'columns': ['order_id', 'order_amount']}"
+Find products that need restocking (less than 5 in stock),SELECT * FROM products WHERE stock_quantity < 5;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'stock_quantity']}"
+List employees hired in the last 6 months,SELECT * FROM employees WHERE hire_date >= CURRENT_DATE - INTERVAL '6 months';,"{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'hire_date']}"
+Find the cheapest product,SELECT * FROM products ORDER BY price ASC LIMIT 1;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+Count how many products are in each category,"SELECT category, COUNT(*) AS product_count FROM products GROUP BY category;","{'table': 'products', 'columns': ['product_id', 'category']}"
+"List customers with their names and emails, sorted by name","SELECT customer_name, email FROM customers ORDER BY customer_name;","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'email']}"
+Find orders that were shipped late,SELECT * FROM orders WHERE ship_date > required_date;,"{'table': 'orders', 'columns': ['order_id', 'ship_date', 'required_date']}"
+Calculate the total value of all products in stock,SELECT SUM(price * stock_quantity) AS total_inventory_value FROM products;,"{'table': 'products', 'columns': ['product_id', 'price', 'stock_quantity']}"
+"List products with their names and prices, sorted by price","SELECT product_name, price FROM products ORDER BY price;","{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+Find customers without email addresses,SELECT * FROM customers WHERE email IS NULL;,"{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'email']}"
+Count how many orders each status has,"SELECT status, COUNT(*) AS status_count FROM orders GROUP BY status;","{'table': 'orders', 'columns': ['order_id', 'status']}"
+List employees with their names and hire dates,"SELECT employee_name, hire_date FROM employees;","{'table': 'employees', 'columns': ['employee_id', 'employee_name', 'hire_date']}"
+Find products with names containing 'Pro',SELECT * FROM products WHERE product_name LIKE '%Pro%';,"{'table': 'products', 'columns': ['product_id', 'product_name']}"
+Calculate the total of all order amounts,SELECT SUM(order_amount) AS total_sales FROM orders;,"{'table': 'orders', 'columns': ['order_id', 'order_amount']}"
+"List customers and their registration dates, newest first","SELECT customer_name, registration_date FROM customers ORDER BY registration_date DESC;","{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'registration_date']}"
+Find products priced between $20 and $50,SELECT * FROM products WHERE price BETWEEN 20 AND 50;,"{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+Count how many employees were hired each year,"SELECT EXTRACT(YEAR FROM hire_date) AS hire_year, COUNT(*) FROM employees GROUP BY EXTRACT(YEAR FROM hire_date);","{'table': 'employees', 'columns': ['employee_id', 'hire_date']}"
+List orders with their dates and amounts,"SELECT order_date, order_amount FROM orders;","{'table': 'orders', 'columns': ['order_id', 'order_date', 'order_amount']}"
+Find the newest customer,SELECT * FROM customers ORDER BY registration_date DESC LIMIT 1;,"{'table': 'customers', 'columns': ['customer_id', 'customer_name', 'registration_date']}"
+List products with prices rounded to the nearest dollar,"SELECT product_name, ROUND(price) AS rounded_price FROM products;","{'table': 'products', 'columns': ['product_id', 'product_name', 'price']}"
+Find the average order amount,SELECT AVG(order_amount) AS avg_order_amount FROM orders;,"{'table': 'orders', 'columns': ['order_id', 'order_amount']}"
+List employees with their names in uppercase,SELECT UPPER(employee_name) AS employee_name FROM employees;,"{'table': 'employees', 'columns': ['employee_id', 'employee_name']}"

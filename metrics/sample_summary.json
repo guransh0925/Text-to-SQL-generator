@@ -1,0 +1,8 @@
+{
+  "test_file": "data/merged_text_sql/test.jsonl",
+  "checkpoint": "checkpoints/text_to_sql_model.pth",
+  "examples": 10,
+  "exact_match": 0.0,
+  "avg_token_f1": 0.3136,
+  "note": "Quick sample from an earlier checkpoint. Re-run evaluate_text_to_sql.py after retraining for final metrics."
+}

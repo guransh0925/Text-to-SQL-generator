@@ -1,0 +1,2 @@
+Table: employees 
+Columns: employee_id, employee_name, department, salary 

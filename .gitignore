@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Large local model/checkpoint artifacts
+*.pth
+*.pt
+*.ckpt*
+gpt2/
+checkpoints/
+
+# Generated datasets and outputs that can be rebuilt
+data/text_to_sql/*.jsonl
+outputs/
+
+# OS/editor clutter
+.DS_Store
+Thumbs.db
+*.log
