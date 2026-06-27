@@ -4,9 +4,11 @@ import sys
 import torch
 
 from text_to_sql_common import format_prompt, get_tokenizer, load_model
-from prepare_spider_text_sql import GENERIC_SCHEMA
 from utilities import generate, text_to_token_ids, token_ids_to_text
 
+
+GENERIC_SCHEMA = """Tables and columns are inferred from the question and SQL examples.
+Use valid SQL and return only the SQL query."""
 
 DEFAULT_SCHEMA = """CREATE TABLE customers (
   id INTEGER PRIMARY KEY,

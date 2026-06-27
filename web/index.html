@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Text to SQL Generator</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace" aria-label="Text to SQL generator">
+        <div class="intro">
+          <p class="eyebrow">Local model demo</p>
+          <h1>Text to SQL Generator</h1>
+          <p>Describe the data you want, include the table schema, and generate a SQL query from your fine-tuned model.</p>
+        </div>
+
+        <form id="generatorForm" class="generator">
+          <label class="field field-schema">
+            <span>Database schema</span>
+            <textarea id="schema" name="schema" spellcheck="false"></textarea>
+          </label>
+
+          <label class="field field-question">
+            <span>Question</span>
+            <textarea id="question" name="question" placeholder="Show completed orders over 1000." required></textarea>
+          </label>
+
+          <div class="actions">
+            <button id="generateButton" class="primary" type="submit">Generate SQL</button>
+            <button id="sampleButton" class="secondary" type="button">Try sample</button>
+          </div>
+        </form>
+
+        <section class="result-panel" aria-live="polite">
+          <div class="result-header">
+            <h2>Generated SQL</h2>
+            <button id="copyButton" class="icon-button" type="button" aria-label="Copy SQL" title="Copy SQL">
+              Copy
+            </button>
+          </div>
+          <pre id="result"><code>SELECT ...</code></pre>
+          <p id="status" class="status">Ready when you are.</p>
+        </section>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

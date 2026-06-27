@@ -29,6 +29,8 @@ SELECT employee_name FROM employees WHERE salary > 50000;
 - `prepare_merged_text_sql.py` - converts `merged_data.csv` into train/validation/test JSONL files
 - `train_text_to_sql.py` - fine-tunes the model
 - `generate_sql.py` - command-line SQL generator
+- `web_app.py` - web server for the browser-based generator
+- `web/` - frontend files for the hosted demo
 - `evaluate_text_to_sql.py` - records exact-match and token-F1 metrics
 - `merged_data.csv` - schema-aware text-to-SQL dataset
 
@@ -56,6 +58,18 @@ Generate SQL:
 
 ```powershell
 .\.venv\Scripts\python.exe generate_sql.py "Retrieve the names of all employees earning more than $50,000." --schema-file employee_schema.txt
+```
+
+Run the website locally:
+
+```powershell
+.\.venv\Scripts\python.exe web_app.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8000
 ```
 
 Evaluate:
@@ -93,3 +107,5 @@ The following files/folders are local artifacts and should not be committed:
 - `.venv/`
 
 If sharing the trained model, upload the checkpoint separately as a GitHub release asset or provide instructions to train it locally.
+
+For hosting the website, see `DEPLOYMENT.md`. Use a Python web service, not a static site host, because the server needs to load the PyTorch model and respond to `/api/generate`.
