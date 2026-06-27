@@ -7,6 +7,7 @@ import torch
 from huggingface_hub import hf_hub_download
 
 from text_to_sql_common import format_prompt, get_tokenizer, load_model
+from sql_heuristics import heuristic_sql
 from utilities import generate, text_to_token_ids, token_ids_to_text
 
 
@@ -88,6 +89,9 @@ def generate_sql(schema, question):
         return "Add a database schema first."
     if not question:
         return "Ask a question to translate."
+    simple_sql = heuristic_sql(schema, question)
+    if simple_sql:
+        return simple_sql
     return get_generator().generate_sql(schema, question)
 
 

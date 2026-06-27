@@ -11,6 +11,7 @@ from urllib.request import urlretrieve
 import torch
 
 from text_to_sql_common import format_prompt, get_tokenizer, load_model
+from sql_heuristics import heuristic_sql
 from utilities import generate, text_to_token_ids, token_ids_to_text
 
 
@@ -134,7 +135,7 @@ def make_handler(generator):
                     json_response(self, 400, {"error": "Ask a question to translate."})
                     return
 
-                sql = generator.generate_sql(schema, question)
+                sql = heuristic_sql(schema, question) or generator.generate_sql(schema, question)
                 json_response(self, 200, {"sql": sql})
             except Exception as exc:
                 json_response(self, 500, {"error": str(exc)})
